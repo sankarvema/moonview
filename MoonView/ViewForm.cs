@@ -26,6 +26,9 @@ namespace MoonView.Forms
         //Values
         int _currIndex = 0;
         double _zoomRatio = 1.0;
+        int imageHeight = 0;
+        int imageWidth = 0;
+
         Ratio.RatioType _ratioType = Ratio.RatioType.FitImage;
 
         //Object
@@ -94,7 +97,11 @@ namespace MoonView.Forms
             try
             {
                 using (MemoryStream ms = new MemoryStream(_fileInfoList[index].ReadAllBytes()))
+                {
                     this.pictureBox1.Image = Image.FromStream(ms, true, true);
+                    imageHeight = this.pictureBox1.Height;
+                    imageWidth = this.pictureBox1.Width;
+                }
             }
             catch (Exception)
             {
@@ -133,8 +140,8 @@ namespace MoonView.Forms
                 _currIndex + 1, //Index start at 1 for gui
                 _fileInfoList.Count,
                 _fileInfoList[_currIndex].Name,
-                width,
-                height,
+                imageWidth,
+                imageHeight,
                 _zoomRatio * 100);
 
             #region old code
@@ -217,6 +224,9 @@ namespace MoonView.Forms
                     break;
                 case Keys.Subtract:
                     ZoomOut(null, null);
+                    break;
+                case Keys.Escape:
+                    this.Close();
                     break;
                 default:
                     break;

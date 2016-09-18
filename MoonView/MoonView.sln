@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual C# Express 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MoonView", "MoonView.csproj", "{BCAAD8C5-D9ED-4FEB-868B-386B20BE0A9C}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "7ZipLib", "..\7ZipLib\7ZipLib.csproj", "{2DBA9377-4C1D-4BB5-A453-F5EC24F8240F}"

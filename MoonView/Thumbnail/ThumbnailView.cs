@@ -12,44 +12,6 @@ using MoonView.Path;
 
 namespace MoonView.Thumbnail
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    public class ThumbnailWorkerState
-    {
-        public ThumbnailView ThumbnailView;
-        public bool Cancel;
-        public IDirectoryInfo DirectoryInfo;
-        public Dictionary<ListViewItem, IFSInfo> ListViewDict;
-
-        public ThumbnailWorkerState(ThumbnailView thumbnailView, Dictionary<ListViewItem, IFSInfo> listViewDict)
-        {
-            ThumbnailView = thumbnailView;
-            Cancel = false;
-            DirectoryInfo = null;
-            ListViewDict = listViewDict;
-        }
-    }
-
-    /// <summary>
-    /// 
-    /// </summary>
-    public struct ThumbnailMetaItem
-    {
-        public IFSInfo FsInfo;
-        public ListViewItem ListViewItem;
-        public Bitmap LargeIcon;
-        public Bitmap SmallIcon;
-
-        public ThumbnailMetaItem(IFSInfo fsInfo, ListViewItem lvItem)
-        {
-            FsInfo = fsInfo;
-            ListViewItem = lvItem;
-            LargeIcon = null;
-            SmallIcon = null;
-        }
-    }
-
     public class ThumbnailView : ListView
     {
         //Object
@@ -107,13 +69,17 @@ namespace MoonView.Thumbnail
             this.Columns.Add(new ColumnHeader());
             this.Columns.Add(new ColumnHeader());
             this.Columns.Add(new ColumnHeader());
+            this.Columns.Add(new ColumnHeader());
             this.Columns[0].Text = "Name";
             this.Columns[1].Text = "Size";
             this.Columns[2].Text = "Type";
             this.Columns[3].Text = "Date";
+            this.Columns[4].Text = "Resolution";
 
             this.DoubleBuffered = true;
-            this.MultiSelect = false;
+            this.MultiSelect = true;
+            this.FullRowSelect = true;
+            this.CheckBoxes = false;
 
             //Large image list
             this.LargeImageList = new ImageList();
@@ -144,6 +110,7 @@ namespace MoonView.Thumbnail
             this.SelectedIndexChanged += new EventHandler(ThumbnailView_SelectedIndexChanged);
             this.MouseDoubleClick += new MouseEventHandler(ThumbnailView_MouseDoubleClick);
             this.ColumnClick += new ColumnClickEventHandler(ThumbnailView_ColumnClick);
+            this.MouseDown += new MouseEventHandler(thubnailView_MouseDown);
         }
 
         void ThumbnailView_SelectedIndexChanged(object sender, EventArgs e)
@@ -319,6 +286,73 @@ namespace MoonView.Thumbnail
                 if (header.Width < 50)
                     header.Width = 50;
             }
+        }
+
+        private void thubnailView_MouseDown(object sender, MouseEventArgs e)
+        {
+            bool match = false;
+
+            if (e.Button == System.Windows.Forms.MouseButtons.Right)
+            {
+                foreach (ListViewItem item in this.Items)
+                {
+                    if (item.Bounds.Contains(new Point(e.X, e.Y)))
+                    {
+                        MenuItem[] mi = new MenuItem[] { new MenuItem("Hello"), new MenuItem("World"), new MenuItem(item.Name) };
+                        this.ContextMenu = new ContextMenu(mi);
+                        match = true;
+                        break;
+                    }
+                }
+                if (match)
+                {
+                    this.ContextMenu.Show(this, new Point(e.X, e.Y));
+                }
+                else
+                {
+                    //Show listViews context menu
+                }
+
+            }
+
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public class ThumbnailWorkerState
+    {
+        public ThumbnailView ThumbnailView;
+        public bool Cancel;
+        public IDirectoryInfo DirectoryInfo;
+        public Dictionary<ListViewItem, IFSInfo> ListViewDict;
+
+        public ThumbnailWorkerState(ThumbnailView thumbnailView, Dictionary<ListViewItem, IFSInfo> listViewDict)
+        {
+            ThumbnailView = thumbnailView;
+            Cancel = false;
+            DirectoryInfo = null;
+            ListViewDict = listViewDict;
+        }
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    public struct ThumbnailMetaItem
+    {
+        public IFSInfo FsInfo;
+        public ListViewItem ListViewItem;
+        public Bitmap LargeIcon;
+        public Bitmap SmallIcon;
+
+        public ThumbnailMetaItem(IFSInfo fsInfo, ListViewItem lvItem)
+        {
+            FsInfo = fsInfo;
+            ListViewItem = lvItem;
+            LargeIcon = null;
+            SmallIcon = null;
         }
     }
 }

@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MoonViewForm));
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.quitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -53,6 +54,7 @@
             this.menuStrip1.SuspendLayout();
             this.toolStrip1.SuspendLayout();
             this.tableLayoutPanel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
             this.splitContainer1.SuspendLayout();
@@ -241,8 +243,8 @@
             // 
             this.thumbnailView1.Activation = System.Windows.Forms.ItemActivation.TwoClick;
             this.thumbnailView1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.thumbnailView1.FullRowSelect = true;
             this.thumbnailView1.Location = new System.Drawing.Point(3, 23);
-            this.thumbnailView1.MultiSelect = false;
             this.thumbnailView1.Name = "thumbnailView1";
             this.thumbnailView1.Size = new System.Drawing.Size(451, 543);
             this.thumbnailView1.TabIndex = 1;
@@ -282,6 +284,7 @@
             this.ClientSize = new System.Drawing.Size(688, 663);
             this.Controls.Add(this.tableLayoutPanel1);
             this.Controls.Add(this.menuStrip1);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MainMenuStrip = this.menuStrip1;
             this.Name = "MoonViewForm";
             this.Text = "MainForm";
@@ -294,6 +297,7 @@
             this.tableLayoutPanel1.PerformLayout();
             this.splitContainer1.Panel1.ResumeLayout(false);
             this.splitContainer1.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
             this.splitContainer1.ResumeLayout(false);
             this.tableLayoutPanel2.ResumeLayout(false);
             this.statusStrip1.ResumeLayout(false);

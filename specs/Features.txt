@@ -1,0 +1,18 @@
+View Mode
+- Organize - 
+- Directory - navigated through tree
+- 
+
+Thumbnail Size - increase decrease
+Thumbnail viewer based on list of items for analysis
+
+Menu
+- Move & Copy
+-- Create
+-- Create + Action
+-- Action
+
+
+
+
+

@@ -4,8 +4,11 @@ using System.Text;
 using System.ComponentModel;
 using System.Windows.Forms;
 using System.Drawing;
+using System.Linq;
+using System.IO;
 
 using MoonView.Path;
+
 
 namespace MoonView.Thumbnail
 {
@@ -161,15 +164,37 @@ namespace MoonView.Thumbnail
         void AddItem(IFSInfo fsInfo)
         {
             ListViewItem lvItem = new ListViewItem(fsInfo.Name, 0);
+
+            // Second column size
             if (fsInfo is IFileInfo)
                 lvItem.SubItems.Add(((IFileInfo)fsInfo).Size.ToString()); //Size
             else
-                lvItem.SubItems.Add(""); //Size
+            {
+                string supportedExtensions = "*.jpg,*.gif,*.png,*.bmp,*.jpe,*.jpeg,*.wmf,*.emf,*.xbm,*.ico,*.eps,*.tif,*.tiff,*.g01,*.g02,*.g03,*.g04,*.g05,*.g06,*.g07,*.g08";
+                int fCount = -1;
+                try
+                {
+                    fCount = Directory.GetFiles(fsInfo.FullPath, "*.*", SearchOption.AllDirectories)
+                        .Where(s => supportedExtensions.Contains(System.IO.Path.GetExtension(s).ToLower())).Count();
+                }
+                catch (Exception ex)
+                { 
+                    // ignore exception while traversal
+                }
+
+                lvItem.SubItems.Add(fCount.ToString()); //Size
+            }
+
+            // Third col type
             if (fsInfo is IFileInfo)
                 lvItem.SubItems.Add(((IFileInfo)fsInfo).Extension.Length > 0 ? ((IFileInfo)fsInfo).Extension + " File" : "File"); //Type
             else
                 lvItem.SubItems.Add("Folder");
+
+            // Fourth col Date Modified
             lvItem.SubItems.Add(fsInfo.LastModifiedTime.ToString("G")); //Date
+
+            // ToDo:: Fifth col Resolution
 
             AddItem(lvItem, fsInfo);
         }

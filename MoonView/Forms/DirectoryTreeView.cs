@@ -8,6 +8,7 @@ using System.Collections.Generic;
 
 //MoonView NS
 using MoonView.Path;
+using MoonView.Menus;
 
 namespace MoonView.Forms
 {
@@ -33,6 +34,20 @@ namespace MoonView.Forms
             //this.AfterSelect += new TreeViewEventHandler(DirectoryTreeView_AfterSelect);
             //this.KeyDown += new KeyEventHandler(DirectoryTreeView_KeyDown);
             this.DoubleClick += new EventHandler(DirectoryTreeView_DoubleClick);
+            this.NodeMouseClick += new TreeNodeMouseClickEventHandler(DirectoryTreeView_NodeMouseClick);
+        }
+
+        void DirectoryTreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+        {
+            
+            if (e.Button == MouseButtons.Right)
+            {
+                string clickedNode = e.Node.Name;
+                MessageBox.Show(e.Node.Name + ":" + e.Node.Tag);
+                DirMenu mnu = new DirMenu();
+                mnu.Show(this,e.Location);
+            }
+
         }
 
         public void Initialise(MoonViewForm parent)
@@ -100,5 +115,27 @@ namespace MoonView.Forms
                 return currNode;
             return ExpandNode(ref level, currNode.Nodes, pathList);
         }
+
+        #region Context Menu Methods
+        private void Initialize()
+        {
+            ContextMenu mnu = new System.Windows.Forms.ContextMenu();
+            MenuItem miSource = new MenuItem("Source", new EventHandler(MenuClick));
+            mnu.MenuItems.Add(miSource);
+
+            MenuItem miDest = new MenuItem("Destination", new EventHandler(MenuClick));
+            mnu.MenuItems.Add(miDest);
+
+
+
+        }
+
+        private void MenuClick(object sender, EventArgs args)
+        {
+            MenuItem mi = (MenuItem)sender;
+            MessageBox.Show(mi.Text + ":" + this.SelectedNode.Text);
+            
+        }
+        #endregion
     }
 }
