@@ -68,7 +68,6 @@
     <Compile Include="Compression\Unrar.cs" />
     <Compile Include="Compression\UnrarReader.cs" />
     <Compile Include="Controller\ImgCmdModule.cs" />
-    <Compile Include="Controller\RecentStack.cs" />
     <Compile Include="Forms\AboutBox.cs">
       <SubType>Form</SubType>
     </Compile>

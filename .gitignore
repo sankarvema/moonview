@@ -51,6 +51,10 @@ Ankh.NoLoad
 !/packages/*/lib/*/*.dll
 
 # ignore bin
-bin/*
-MoonView/bin/*
+[Bb]in/*
+MoonView\[Bb]in\[Dd}ebug\*
 MoonView/_Upgrade*/*
+*.dll
+MoonView/bin/Debug/7ZipLib.dll
+MoonView/bin/Debug/7ZipLib.pdb
+*.exe

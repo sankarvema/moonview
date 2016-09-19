@@ -12,7 +12,6 @@ namespace MoonView.Controller
 {
     class ImgCmdModule
     {
-        //Config config = new Config();
         CompareForm comparer = new CompareForm();
 
         public void InitCmd(string tag, IEnumerable<string> files)
@@ -21,8 +20,6 @@ namespace MoonView.Controller
             {
                 MessageCache.Instance().Add(DateTime.Now.ToString());
                 MessageCache.Instance().Add("Command Init: " + tag);
-
-                //config.InitConfig();
 
                 if (String.IsNullOrEmpty(Utility.Config.AnchorSource))
                     MessageBox.Show("Source anchor is not fixed");
@@ -64,11 +61,10 @@ namespace MoonView.Controller
 
                 MessageCache.Instance().Add("Processing Files...");
                 MessageCache.Instance().Add("--------------------");
+
                 //  Builder for the output.
                 var builder = new StringBuilder();
                 int count = 0;
-
-                //int b4Count = Directory.GetFiles(dest).Length;
 
                 //  Go through each file.
                 foreach (var filePath in files)
@@ -81,10 +77,6 @@ namespace MoonView.Controller
 
                     //include blog directory
                     string newPath = dest + @"\" + filePath.Replace(Utility.Config.AnchorSource, "");
-
-                    //int endOfBase = newPath.IndexOf(dest, 0) + 1;
-                    //string exclusionPart = newPath.Substring(endOfBase, newPath.IndexOf('/', endOfBase));
-                    //newPath = newPath.Replace(exclusionPart, "");
 
                     if (File.Exists(newPath))
                     {
@@ -123,14 +115,11 @@ namespace MoonView.Controller
 
                 }
 
+                Utility.Config.RecentList.Add(dest);
                 //RecentStack.Add(new LastItem("", dest));
                 //RecentStack.Save();
 
                 MessageCache.Instance().Add(String.Format("{0} >>> {1} file(s) to {2}", action2, count, dest));
-
-                //int aftCount = Directory.GetFiles(dest).Length;
-                //MessageCache.Instance().Add(String.Format("File verification: {0} + {1} = {2} is ({3})", b4Count, count, aftCount, 
-                //    (b4Count+count == aftCount).ToString()));
             }
             catch (Exception ex)
             {
@@ -149,14 +138,12 @@ namespace MoonView.Controller
 
                     if (File.Exists(dest))
                     {
-                        //File.Delete(source);
                         status = "OK";
                     }
                     break;
 
                 case "MOVE":
                     File.Copy(source, dest, true);
-                    //File.Move(source, dest);
 
                     if (File.Exists(dest))
                     {
@@ -166,7 +153,6 @@ namespace MoonView.Controller
 
                     break;
             }
-            //MessageBox.Show(String.Format("{0}: {1} > {2}", action, source, dest));
             MessageCache.Instance().Add(String.Format("{0}: {1} > {2} [{3}]", action, source, dest, status));
         }
 

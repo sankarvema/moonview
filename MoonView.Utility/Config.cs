@@ -39,6 +39,9 @@ namespace MoonView
         private string _anchorSource;
         [XmlElement]
         private string _anchorDest;
+        [XmlElement]
+        private List<string> _recentItems = new List<string>();
+
 
         public int Top
         {
@@ -78,6 +81,12 @@ namespace MoonView
         {
             get { return _lastDirectoryPath; }
             set { _lastDirectoryPath = value; }
+        }
+
+        public List<string> RecentList
+        {
+            get { return _recentItems; }
+            set { _recentItems = value; }
         }
 
         /// <summary>

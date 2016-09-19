@@ -337,38 +337,61 @@ namespace MoonView.Thumbnail
             miProperties.Tag = "PROP";
             mnu.MenuItems.Add(miProperties);
 
-            //BuildRecent(miCopy, miMove);
+            BuildActionMenu(miCopy, miMove, Utility.Config.AnchorDest);
+            BuildRecent(miCopy, miMove);
             BuildMenu(miCopy, miMove, Utility.Config.AnchorDest);
 
             return mnu;
 
         }
 
-        //protected void BuildRecent(MenuItem copyMenu, MenuItem moveMenu)
-        //{
-        //    //RecentStack.Read();
-        //    foreach (LastItem item in RecentStack.Items)
-        //    {
-        //        string dispItem = GetDispItem(item);
+        protected void BuildRecent(MenuItem copyMenu, MenuItem moveMenu)
+        {
+            foreach (string item in Utility.Config.RecentList)
+            {
+                string dispItem = GetDispItem(item);
 
-        //        MenuItem mnuRecentMove = new MenuItem(dispItem);
-        //        mnuRecentMove.Click += MenuSelected;
-        //        mnuRecentMove.Tag = "RECENT::MOVE::" + item.path;
-        //        moveMenu.DropDownItems.Add(mnuRecentMove); 
-                
-        //        MenuItem mnuRecentCopy = new MenuItem(dispItem);
-        //        mnuRecentCopy.Click += MenuSelected;
-        //        mnuRecentCopy.Tag = "RECENT::COPY::" + item.path;
-        //        copyMenu.DropDownItems.Add(mnuRecentCopy);
-        //    }
-        //    ToolStripSeparator seperatorMenu1 = new ToolStripSeparator();
-        //    moveMenu.DropDownItems.Add(seperatorMenu1);
+                MenuItem mnuRecentMove = new MenuItem(dispItem);
+                mnuRecentMove.Click += MenuClick;
+                mnuRecentMove.Tag = "RECENT::MOVE::" + item;
+                moveMenu.MenuItems.Add(mnuRecentMove);
 
-        //    ToolStripSeparator seperatorMenu2 = new ToolStripSeparator();
-        //    copyMenu.DropDownItems.Add(seperatorMenu2);
-        //}
+                MenuItem mnuRecentCopy = new MenuItem(dispItem);
+                mnuRecentCopy.Click += MenuClick;
+                mnuRecentCopy.Tag = "RECENT::COPY::" + item;
+                copyMenu.MenuItems.Add(mnuRecentCopy);
+            }
+            
+            moveMenu.MenuItems.Add(new MenuItem("-"));
+            copyMenu.MenuItems.Add(new MenuItem("-"));
+        }
 
         protected void BuildMenu(MenuItem copyMenu, MenuItem moveMenu, String dir)
+        {          
+            try
+            {
+                foreach (string d in Directory.GetDirectories(dir))
+                {
+                    MenuItem mnuMove = new MenuItem(d.Substring(d.LastIndexOf("\\") + 1));
+                    mnuMove.Click += MenuClick;
+                    mnuMove.Tag = "DIR::" + d;
+                    moveMenu.MenuItems.Add(mnuMove);
+
+                    MenuItem mnuCopy = new MenuItem(d.Substring(d.LastIndexOf("\\") + 1));
+                    mnuCopy.Click += MenuClick;
+                    mnuCopy.Tag = "DIR::" + d;
+                    copyMenu.MenuItems.Add(mnuCopy);
+
+                    BuildMenu(mnuCopy, mnuMove, d);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        private void BuildActionMenu(MenuItem copyMenu, MenuItem moveMenu, String dir)
         {
             if (moveMenu.MenuItems.Count == 0)
             {
@@ -409,28 +432,20 @@ namespace MoonView.Thumbnail
 
                 copyMenu.MenuItems.Add(new MenuItem("-"));
             }
+        }
 
-            try
+        public string GetDispItem(string item)
+        {
+            string thisPath = item.Replace(Utility.Config.AnchorDest, "");
+            string[] segs = thisPath.Split(new char[] { '\\' });
+            string rVal = string.Empty;
+
+            for (int i = 0; i < segs.Length; i++)
             {
-                foreach (string d in Directory.GetDirectories(dir))
-                {
-                    MenuItem mnuMove = new MenuItem(d.Substring(d.LastIndexOf("\\") + 1));
-                    mnuMove.Click += MenuClick;
-                    mnuMove.Tag = "DIR::" + d;
-                    moveMenu.MenuItems.Add(mnuMove);
-
-                    MenuItem mnuCopy = new MenuItem(d.Substring(d.LastIndexOf("\\") + 1));
-                    mnuCopy.Click += MenuClick;
-                    mnuCopy.Tag = "DIR::" + d;
-                    copyMenu.MenuItems.Add(mnuCopy);
-
-                    BuildMenu(mnuCopy, mnuMove, d);
-                }
+                rVal = rVal + segs[i] + ">";
             }
-            catch (System.Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
+            return rVal;
+
         }
 
         private void MenuClick(object sender, EventArgs args)
