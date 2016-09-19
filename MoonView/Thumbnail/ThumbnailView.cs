@@ -311,7 +311,8 @@ namespace MoonView.Thumbnail
                 }
                 else
                 {
-                    //Show listViews context menu
+                    this.ContextMenu = InitListViewContextMenu();
+
                 }
 
             }

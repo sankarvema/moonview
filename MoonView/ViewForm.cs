@@ -136,13 +136,17 @@ namespace MoonView.Forms
             this.Visible = true;
             this.panel1.Focus();
             //
-            this.toolStripStatusLabel1.Text = string.Format("[{0}/{1}] {2} {3} x {4} px {5:f1}%",
+            this.toolStripStatusLabel1.Text = string.Format("[{0}/{1}] {2} [Org: {3} x {4} px] [Scaled: {5} x {6}] {7:f1}% {8:f1}%",
                 _currIndex + 1, //Index start at 1 for gui
                 _fileInfoList.Count,
                 _fileInfoList[_currIndex].Name,
                 imageWidth,
                 imageHeight,
-                _zoomRatio * 100);
+                width,
+                height,
+                scale,
+                _zoomRatio * 100
+                );
 
             #region old code
             //this.pictureBox1.Image = ImageLibrary.SurfaceToBitmap(_currSurf);

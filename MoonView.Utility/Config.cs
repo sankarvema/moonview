@@ -40,7 +40,7 @@ namespace MoonView
         [XmlElement]
         private string _anchorDest;
         [XmlElement]
-        private List<string> _recentItems = new List<string>();
+        private HashSet<string> _recentItems = new HashSet<string>();
 
 
         public int Top
@@ -83,7 +83,7 @@ namespace MoonView
             set { _lastDirectoryPath = value; }
         }
 
-        public List<string> RecentList
+        public HashSet<string> RecentList
         {
             get { return _recentItems; }
             set { _recentItems = value; }
