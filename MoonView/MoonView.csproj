@@ -67,18 +67,30 @@
     <Compile Include="Compression\SevenZipReader.cs" />
     <Compile Include="Compression\Unrar.cs" />
     <Compile Include="Compression\UnrarReader.cs" />
+    <Compile Include="Controller\ImgCmdModule.cs" />
+    <Compile Include="Controller\RecentStack.cs" />
     <Compile Include="Forms\AboutBox.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Forms\AboutBox.Designer.cs">
       <DependentUpon>AboutBox.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\Compare.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\Compare.designer.cs">
+      <DependentUpon>Compare.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\DirectoryTreeView.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="Menus\DirMenu.cs">
-      <SubType>Component</SubType>
+    <Compile Include="Forms\MessageCache.cs">
+      <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Forms\MessageCache.designer.cs">
+      <DependentUpon>MessageCache.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\Prompt.cs" />
     <Compile Include="Path\SevenZipDirectoryInfo.cs" />
     <Compile Include="Path\SevenZipFileInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -132,6 +144,12 @@
     <EmbeddedResource Include="Forms\AboutBox.resx">
       <DependentUpon>AboutBox.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\Compare.resx">
+      <DependentUpon>Compare.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\MessageCache.resx">
+      <DependentUpon>MessageCache.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MoonViewForm.resx">
       <DependentUpon>MoonViewForm.cs</DependentUpon>
@@ -232,6 +250,10 @@
       <Project>{2DBA9377-4C1D-4BB5-A453-F5EC24F8240F}</Project>
       <Name>7ZipLib</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MoonView.FileSystem\MoonView.FileSystem.csproj">
+      <Project>{A888D21F-C467-4DDF-ABD7-8E9079D2D75A}</Project>
+      <Name>MoonView.FileSystem</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MoonView.Utility\MoonView.Utility.csproj">
       <Project>{7A86003F-0924-4CEA-89C9-12B50C5F8F46}</Project>
       <Name>MoonView.Utility</Name>
@@ -243,4 +265,5 @@
   <ItemGroup>
     <Content Include="viewer_100x100.ico" />
   </ItemGroup>
+  <ItemGroup />
 </Project>

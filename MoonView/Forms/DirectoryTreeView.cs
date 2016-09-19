@@ -8,7 +8,6 @@ using System.Collections.Generic;
 
 //MoonView NS
 using MoonView.Path;
-using MoonView.Menus;
 
 namespace MoonView.Forms
 {
@@ -43,8 +42,7 @@ namespace MoonView.Forms
             if (e.Button == MouseButtons.Right)
             {
                 string clickedNode = e.Node.Name;
-                MessageBox.Show(e.Node.Name + ":" + e.Node.Tag);
-                DirMenu mnu = new DirMenu();
+                ContextMenu mnu = InitContextMenu();
                 mnu.Show(this,e.Location);
             }
 
@@ -84,11 +82,11 @@ namespace MoonView.Forms
 
         public void PopulateNodes(IDirectoryInfo dirInfo)
         {
-            List<string> pathList = new List<string>();
+            List<IDirectoryInfo> pathList = new List<IDirectoryInfo>();
             IDirectoryInfo currDirInfo = dirInfo;
             while (true)
             {
-                pathList.Insert(0, currDirInfo.Name);
+                pathList.Insert(0, currDirInfo);
                 Console.WriteLine(currDirInfo.Name);
                 currDirInfo = currDirInfo.Parent;
                 if (currDirInfo == null)
@@ -100,14 +98,20 @@ namespace MoonView.Forms
             this.Update();
         }
 
-        public TreeNode ExpandNode(ref int level, TreeNodeCollection nodes, string[] pathList)
+        public TreeNode ExpandNode(ref int level, TreeNodeCollection nodes, IDirectoryInfo[] pathList)
         {
             TreeNode currNode;
-            string name = pathList[level];
+            IDirectoryInfo currDirInfo = pathList[level];
+            string name = currDirInfo.Name;
             if (nodes.ContainsKey(name))
                 currNode = nodes[name];
             else
-                currNode = nodes.Add(name, name, FOLDER_ICON, FOLDER_ICON);
+            {
+                currNode = new TreeNode(name, FOLDER_ICON, FOLDER_ICON);
+                currNode.Name = name;
+                currNode.Tag = currDirInfo.FullPath;
+                nodes.Add(currNode);
+            }
             level++;
             if (!currNode.IsExpanded)
                 currNode.Toggle();
@@ -117,23 +121,51 @@ namespace MoonView.Forms
         }
 
         #region Context Menu Methods
-        private void Initialize()
+        private ContextMenu InitContextMenu()
         {
             ContextMenu mnu = new System.Windows.Forms.ContextMenu();
             MenuItem miSource = new MenuItem("Source", new EventHandler(MenuClick));
+            miSource.Tag = "SRC";
             mnu.MenuItems.Add(miSource);
 
             MenuItem miDest = new MenuItem("Destination", new EventHandler(MenuClick));
+            miDest.Tag = "DEST";
             mnu.MenuItems.Add(miDest);
 
+            mnu.MenuItems.Add(new MenuItem("-"));
 
+            MenuItem miProperties = new MenuItem("Properties", new EventHandler(MenuClick));
+            miProperties.Tag = "PROP";
+            mnu.MenuItems.Add(miProperties);
+            return mnu;
 
         }
 
         private void MenuClick(object sender, EventArgs args)
         {
+            if (this.SelectedNode.Tag == null)
+            {
+                MessageBox.Show("Tree node not selected properly", "Alert!!!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             MenuItem mi = (MenuItem)sender;
-            MessageBox.Show(mi.Text + ":" + this.SelectedNode.Text);
+            MessageBox.Show(mi.Tag + ":" + this.SelectedNode.Tag);
+
+            switch (mi.Tag.ToString())
+            { 
+                case "SRC":
+                    Utility.Config.AnchorSource = this.SelectedNode.Tag.ToString();
+                    break;
+
+                case "DEST":
+                    Utility.Config.AnchorDest = this.SelectedNode.Tag.ToString();
+                    break;
+
+                default:
+                    // unknown command ignore
+                    break;
+            }
             
         }
         #endregion

@@ -35,6 +35,10 @@ namespace MoonView
         private int _location_left;
         [XmlElement]
         private string _lastDirectoryPath;
+        [XmlElement]
+        private string _anchorSource;
+        [XmlElement]
+        private string _anchorDest;
 
         public int Top
         {
@@ -56,6 +60,18 @@ namespace MoonView
                 _size_width = value.Width;
                 _size_height = value.Height;
             }
+        }
+
+        public String AnchorSource
+        {
+            get { return _anchorSource; }
+            set { _anchorSource = value; }
+        }
+
+        public String AnchorDest
+        {
+            get { return _anchorDest; }
+            set { _anchorDest = value; }
         }
 
         public string LastDirectoryPath

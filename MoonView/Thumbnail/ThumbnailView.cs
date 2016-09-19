@@ -9,6 +9,8 @@ using System.ComponentModel;
 
 //MoonView NS
 using MoonView.Path;
+using System.IO;
+using MoonView.Controller;
 
 namespace MoonView.Thumbnail
 {
@@ -298,8 +300,7 @@ namespace MoonView.Thumbnail
                 {
                     if (item.Bounds.Contains(new Point(e.X, e.Y)))
                     {
-                        MenuItem[] mi = new MenuItem[] { new MenuItem("Hello"), new MenuItem("World"), new MenuItem(item.Name) };
-                        this.ContextMenu = new ContextMenu(mi);
+                        this.ContextMenu = InitImageContextMenu();
                         match = true;
                         break;
                     }
@@ -316,6 +317,151 @@ namespace MoonView.Thumbnail
             }
 
         }
+
+        #region Context Menu Methods
+        private ContextMenu InitImageContextMenu()
+        {
+            ContextMenu mnu = new System.Windows.Forms.ContextMenu();
+
+            MenuItem miMove = new MenuItem("Move", new EventHandler(MenuClick));
+            miMove.Tag = "MOVE";
+            mnu.MenuItems.Add(miMove);
+
+            MenuItem miCopy = new MenuItem("Copy", new EventHandler(MenuClick));
+            miCopy.Tag = "COPY";
+            mnu.MenuItems.Add(miCopy);
+
+            mnu.MenuItems.Add(new MenuItem("-"));
+
+            MenuItem miProperties = new MenuItem("Properties", new EventHandler(MenuClick));
+            miProperties.Tag = "PROP";
+            mnu.MenuItems.Add(miProperties);
+
+            //BuildRecent(miCopy, miMove);
+            BuildMenu(miCopy, miMove, Utility.Config.AnchorDest);
+
+            return mnu;
+
+        }
+
+        //protected void BuildRecent(MenuItem copyMenu, MenuItem moveMenu)
+        //{
+        //    //RecentStack.Read();
+        //    foreach (LastItem item in RecentStack.Items)
+        //    {
+        //        string dispItem = GetDispItem(item);
+
+        //        MenuItem mnuRecentMove = new MenuItem(dispItem);
+        //        mnuRecentMove.Click += MenuSelected;
+        //        mnuRecentMove.Tag = "RECENT::MOVE::" + item.path;
+        //        moveMenu.DropDownItems.Add(mnuRecentMove); 
+                
+        //        MenuItem mnuRecentCopy = new MenuItem(dispItem);
+        //        mnuRecentCopy.Click += MenuSelected;
+        //        mnuRecentCopy.Tag = "RECENT::COPY::" + item.path;
+        //        copyMenu.DropDownItems.Add(mnuRecentCopy);
+        //    }
+        //    ToolStripSeparator seperatorMenu1 = new ToolStripSeparator();
+        //    moveMenu.DropDownItems.Add(seperatorMenu1);
+
+        //    ToolStripSeparator seperatorMenu2 = new ToolStripSeparator();
+        //    copyMenu.DropDownItems.Add(seperatorMenu2);
+        //}
+
+        protected void BuildMenu(MenuItem copyMenu, MenuItem moveMenu, String dir)
+        {
+            if (moveMenu.MenuItems.Count == 0)
+            {
+                MenuItem mnuNewFolder = new MenuItem("New");
+                mnuNewFolder.Click += MenuClick;
+                mnuNewFolder.Tag = "NEW::NOPE::" + dir;
+                moveMenu.MenuItems.Add(mnuNewFolder);
+
+                MenuItem mnuAddFolder = new MenuItem("New + Move");
+                mnuAddFolder.Click += MenuClick;
+                mnuAddFolder.Tag = "NEW::MOVE::" + dir;
+                moveMenu.MenuItems.Add(mnuAddFolder);
+
+                MenuItem mnuCopyFile = new MenuItem("Move");
+                mnuCopyFile.Click += MenuClick;
+                mnuCopyFile.Tag = "NOPE::MOVE::" + dir;
+                moveMenu.MenuItems.Add(mnuCopyFile);
+
+                moveMenu.MenuItems.Add(new MenuItem("-"));
+            }
+
+            if (copyMenu.MenuItems.Count == 0)
+            {
+                MenuItem mnuNewFolder = new MenuItem("New");
+                mnuNewFolder.Click += MenuClick;
+                mnuNewFolder.Tag = "NEW::NOPE::" + dir;
+                copyMenu.MenuItems.Add(mnuNewFolder);
+
+                MenuItem mnuAddFolder = new MenuItem("New + Copy");
+                mnuAddFolder.Click += MenuClick;
+                mnuAddFolder.Tag = "NEW::COPY::" + dir;
+                copyMenu.MenuItems.Add(mnuAddFolder);
+
+                MenuItem mnuCopyFile = new MenuItem("Copy");
+                mnuCopyFile.Click += MenuClick;
+                mnuCopyFile.Tag = "NOPE::COPY::" + dir;
+                copyMenu.MenuItems.Add(mnuCopyFile);
+
+                copyMenu.MenuItems.Add(new MenuItem("-"));
+            }
+
+            try
+            {
+                foreach (string d in Directory.GetDirectories(dir))
+                {
+                    MenuItem mnuMove = new MenuItem(d.Substring(d.LastIndexOf("\\") + 1));
+                    mnuMove.Click += MenuClick;
+                    mnuMove.Tag = "DIR::" + d;
+                    moveMenu.MenuItems.Add(mnuMove);
+
+                    MenuItem mnuCopy = new MenuItem(d.Substring(d.LastIndexOf("\\") + 1));
+                    mnuCopy.Click += MenuClick;
+                    mnuCopy.Tag = "DIR::" + d;
+                    copyMenu.MenuItems.Add(mnuCopy);
+
+                    BuildMenu(mnuCopy, mnuMove, d);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+
+        private void MenuClick(object sender, EventArgs args)
+        {
+            if (this.SelectedItems.Count == 0)
+            {
+                MessageBox.Show("Thumbnails not selected properly", "Alert!!!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            MenuItem mi = (MenuItem)sender;
+            MessageBox.Show(mi.Tag + ":" + this.SelectedItems.Count);
+
+            StringBuilder msg = new StringBuilder();
+            foreach (ListViewItem item in this.SelectedItems)
+            {
+                msg.AppendLine(item.Text + ":" + item.Tag);
+            }
+            MessageBox.Show(msg.ToString());
+
+            ImgCmdModule cmd = new ImgCmdModule();
+            List<string> selectedItems = new List<string>();
+            foreach (ListViewItem item in this.SelectedItems)
+            {
+                selectedItems.Add(item.Tag.ToString());
+            }
+
+            cmd.InitCmd(mi.Tag.ToString(), selectedItems);
+
+        }
+        #endregion
     }
 
     /// <summary>

@@ -195,7 +195,7 @@ namespace MoonView.Thumbnail
             lvItem.SubItems.Add(fsInfo.LastModifiedTime.ToString("G")); //Date
 
             // ToDo:: Fifth col Resolution
-
+            lvItem.Tag = fsInfo.FullPath;
             AddItem(lvItem, fsInfo);
         }
 

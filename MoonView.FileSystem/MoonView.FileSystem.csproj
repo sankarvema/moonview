@@ -66,6 +66,7 @@
     <Compile Include="RarFileInfo.cs" />
     <Compile Include="SevenZipDirectoryInfo.cs" />
     <Compile Include="SevenZipFileInfo.cs" />
+    <Compile Include="Utils.cs" />
     <Compile Include="ZipDirectoryInfo.cs" />
     <Compile Include="ZipFileInfo.cs" />
   </ItemGroup>
